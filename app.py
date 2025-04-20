@@ -12,14 +12,18 @@ app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'static/uploads'
 
 model_path = "model.pkl"
-model_url = "https://drive.google.com/file/d/1KAh3S_RWFcoHQIm5BHSkZiCLiEpmq1L4/view?usp=sharing"
+model_url = "https://drive.google.com/uc?export=download&id=1KAh3S_RWFcoHQIm5BHSkZiCLiEpmq1L4"
 
-# Download if not exists
+# Download the model only if it doesn't exist
 if not os.path.exists(model_path):
     print("Downloading model...")
-    r = requests.get(model_url)
-    with open(model_path, 'wb') as f:
-        f.write(r.content)
+    response = requests.get(model_url)
+    if response.status_code == 200:
+        with open(model_path, "wb") as f:
+            f.write(response.content)
+        print("Model downloaded successfully.")
+    else:
+        raise Exception(f"Failed to download model: HTTP {response.status_code}")
 
 # Load model
 with open(model_path, "rb") as file:
