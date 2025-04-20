@@ -5,6 +5,7 @@ import json
 from PIL import Image
 import os
 import pickle
+import requests
 from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
