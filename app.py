@@ -6,24 +6,21 @@ from PIL import Image
 import os
 import pickle
 import requests
+import gdown
 from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'static/uploads'
 
 model_path = "model.pkl"
-model_url = "https://drive.google.com/uc?export=download&id=1KAh3S_RWFcoHQIm5BHSkZiCLiEpmq1L4"
+google_drive_file_id = "1KAh3S_RWFcoHQIm5BHSkZiCLiEpmq1L4"
+model_url = f"https://drive.google.com/uc?id={google_drive_file_id}"
 
 # Download the model only if it doesn't exist
 if not os.path.exists(model_path):
-    print("Downloading model...")
-    response = requests.get(model_url)
-    if response.status_code == 200:
-        with open(model_path, "wb") as f:
-            f.write(response.content)
-        print("Model downloaded successfully.")
-    else:
-        raise Exception(f"Failed to download model: HTTP {response.status_code}")
+    print("Downloading model with gdown...")
+    gdown.download(model_url, model_path, quiet=False)
+    print("Model downloaded successfully.")
 
 # Load model
 with open(model_path, "rb") as file:
