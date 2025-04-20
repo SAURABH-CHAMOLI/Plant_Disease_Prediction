@@ -10,8 +10,17 @@ from werkzeug.utils import secure_filename
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'static/uploads'
 
-# Load model
 model_path = "model.pkl"
+model_url = "https://drive.google.com/file/d/1KAh3S_RWFcoHQIm5BHSkZiCLiEpmq1L4/view?usp=sharing"
+
+# Download if not exists
+if not os.path.exists(model_path):
+    print("Downloading model...")
+    r = requests.get(model_url)
+    with open(model_path, 'wb') as f:
+        f.write(r.content)
+
+# Load model
 with open(model_path, "rb") as file:
     model = pickle.load(file)
 
